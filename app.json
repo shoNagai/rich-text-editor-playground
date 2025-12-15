@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
+    "scheme": "rich-text-editor-playground",
     "splash": {
       "backgroundColor": "#0a0a0a"
     },

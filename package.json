@@ -2,7 +2,7 @@
   "name": "rich-text-editor-playground",
   "version": "1.0.0",
   "private": true,
-  "main": "index.ts",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "expo": "54.0.21",
+    "expo-constants": "^18.0.12",
+    "expo-linking": "^8.0.10",
+    "expo-router": "^6.0.19",
     "expo-status-bar": "3.0.8",
     "react": "19.1.0",
     "react-native": "0.81.5",
