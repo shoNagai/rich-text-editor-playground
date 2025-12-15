@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, Text, View, Pressable, KeyboardAvoidingView, Platform, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router } from "expo-router";
 import {
@@ -27,7 +27,9 @@ export default function LexicalEditorScreen() {
             </Pressable>
           </View>
           <Text style={styles.title}>Lexical Rich Text Editor</Text>
-          <Text style={styles.subtitle}>React Native Playground</Text>
+          <Pressable onPress={() => Linking.openURL("https://github.com/facebook/lexical")}>
+            <Text style={styles.subtitleLink}>github.com/facebook/lexical</Text>
+          </Pressable>
         </View>
 
         <KeyboardAvoidingView
@@ -77,6 +79,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
     marginTop: 2,
+  },
+  subtitleLink: {
+    fontSize: 14,
+    color: "#007AFF",
+    marginTop: 2,
+    textDecorationLine: "underline",
   },
   editorContainer: {
     flex: 1,

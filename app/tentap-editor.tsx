@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
@@ -22,7 +22,9 @@ export default function TentapEditorScreen() {
           </Pressable>
         </View>
         <Text style={styles.title}>10tap Editor</Text>
-        <Text style={styles.subtitle}>@10play/tentap-editor (Tiptap based)</Text>
+        <Pressable onPress={() => Linking.openURL("https://github.com/10play/10tap-editor")}>
+          <Text style={styles.subtitleLink}>github.com/10play/10tap-editor</Text>
+        </Pressable>
       </View>
 
       <View style={{ flex: 1 }}>
@@ -65,5 +67,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
     marginTop: 2,
+  },
+  subtitleLink: {
+    fontSize: 14,
+    color: "#007AFF",
+    marginTop: 2,
+    textDecorationLine: "underline",
   },
 });

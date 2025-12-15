@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, Text, View, Pressable, KeyboardAvoidingView, Platform, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
@@ -21,7 +21,9 @@ export default function EnrichedEditorScreen() {
           </Pressable>
         </View>
         <Text style={styles.title}>Enriched Editor</Text>
-        <Text style={styles.subtitle}>react-native-enriched</Text>
+        <Pressable onPress={() => Linking.openURL("https://github.com/AlirezaHadjar/react-native-enriched")}>
+          <Text style={styles.subtitleLink}>github.com/AlirezaHadjar/react-native-enriched</Text>
+        </Pressable>
       </View>
 
       <KeyboardAvoidingView
@@ -70,6 +72,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
     marginTop: 2,
+  },
+  subtitleLink: {
+    fontSize: 14,
+    color: "#007AFF",
+    marginTop: 2,
+    textDecorationLine: "underline",
   },
   editorContainer: {
     flex: 1,

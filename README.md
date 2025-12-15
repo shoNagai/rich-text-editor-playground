@@ -13,6 +13,7 @@ React Native で様々なリッチテキストエディタライブラリを試�
 - [x] **Lexical Editor** - Meta製のリッチテキストエディタ（WebView経由）
 - [x] **Enriched Editor** - react-native-enriched（ネイティブ実装）
 - [x] **10tap Editor** - @10play/tentap-editor（Tiptap based、WebView経由）
+- [x] **Pell Editor** - react-native-pell-rich-editor（WebView経由）
 
 ## プロジェクト構成
 
@@ -22,7 +23,8 @@ React Native で様々なリッチテキストエディタライブラリを試�
 │   ├── index.tsx                 # トップページ（エディタ一覧）
 │   ├── lexical-editor.tsx        # Lexical Editor ページ
 │   ├── enriched-editor.tsx       # Enriched Editor ページ
-│   └── tentap-editor.tsx         # 10tap Editor ページ
+│   ├── tentap-editor.tsx         # 10tap Editor ページ
+│   └── pell-editor.tsx           # Pell Editor ページ
 ├── src/
 │   └── components/
 │       ├── lexical-editor/       # Lexical Editor コンポーネント
@@ -33,10 +35,18 @@ React Native で様々なリッチテキストエディタライブラリを試�
 │       │   └── web/              # WebView用ビルド
 │       │       ├── build.mjs
 │       │       └── editor-template.html
-│       └── enriched-editor/      # Enriched Editor コンポーネント
+│       ├── enriched-editor/      # Enriched Editor コンポーネント
+│       │   ├── index.ts
+│       │   ├── enriched-editor.tsx
+│       │   └── use-enriched-editor.ts
+│       ├── tentap-editor/        # 10tap Editor コンポーネント
+│       │   ├── index.ts
+│       │   ├── tentap-editor.tsx
+│       │   └── use-tentap-editor.ts
+│       └── pell-editor/          # Pell Editor コンポーネント
 │           ├── index.ts
-│           ├── enriched-editor.tsx
-│           └── use-enriched-editor.ts
+│           ├── pell-editor.tsx
+│           └── use-pell-editor.ts
 ├── app.json                      # Expo設定
 ├── package.json
 └── tsconfig.json
