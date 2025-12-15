@@ -1,0 +1,38 @@
+{
+  "name": "rich-text-editor-playground",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "typecheck": "tsc --noEmit",
+    "build:lexical": "node src/components/lexical-editor/web/build.mjs"
+  },
+  "dependencies": {
+    "expo": "54.0.21",
+    "expo-status-bar": "3.0.8",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-safe-area-context": "5.6.1",
+    "react-native-webview": "13.16.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.28.4",
+    "@lexical/history": "0.38.2",
+    "@lexical/link": "0.38.2",
+    "@lexical/list": "0.38.2",
+    "@lexical/rich-text": "0.38.2",
+    "@lexical/selection": "0.38.2",
+    "@types/react": "19.1.17",
+    "esbuild": "0.27.0",
+    "lexical": "0.38.2",
+    "typescript": "5.9.3"
+  },
+  "packageManager": "pnpm@10.7.0",
+  "engines": {
+    "node": "22.x",
+    "pnpm": ">=10"
+  }
+}

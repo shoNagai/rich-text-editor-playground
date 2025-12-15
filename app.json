@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "rich-text-editor-playground",
+    "slug": "rich-text-editor-playground",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#0a0a0a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.playground.richtexteditor"
+    },
+    "android": {
+      "package": "com.playground.richtexteditor"
+    }
+  }
+}
