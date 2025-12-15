@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable, KeyboardAvoidingView, Platform } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, Text, View, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
   EnrichedEditor,
@@ -9,14 +8,8 @@ import {
 } from "../src/components/enriched-editor";
 
 export default function EnrichedEditorScreen() {
-  const [html, setHtml] = useState<string>("");
-  const insets = useSafeAreaInsets();
-
   const editor = useEnrichedEditor({
-    placeholder: "テキストを入力...",
-    onHtmlChange: (value) => {
-      setHtml(value);
-    },
+    placeholder: "Enrichedエディタで入力",
   });
 
   return (
@@ -34,20 +27,13 @@ export default function EnrichedEditorScreen() {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
-        keyboardVerticalOffset={insets.top}
+        keyboardVerticalOffset={0}
       >
         <View style={styles.editorContainer}>
           <EnrichedEditor editor={editor} style={{ flex: 1 }} />
         </View>
 
         <EnrichedEditorToolbar editor={editor} />
-
-        <View style={styles.debugContainer}>
-          <Text style={styles.debugTitle}>Editor HTML:</Text>
-          <ScrollView style={styles.debugScrollView}>
-            <Text style={styles.debugText}>{html || "No content yet"}</Text>
-          </ScrollView>
-        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

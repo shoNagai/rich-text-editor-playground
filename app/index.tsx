@@ -19,6 +19,11 @@ const EDITORS: EditorItem[] = [
     href: "/enriched-editor",
     description: "react-native-enriched（ネイティブ）",
   },
+  {
+    name: "10tap Editor",
+    href: "/tentap-editor",
+    description: "@10play/tentap-editor（Tiptap based）",
+  },
 ];
 
 export default function HomeScreen() {

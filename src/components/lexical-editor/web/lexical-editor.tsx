@@ -57,6 +57,152 @@ import {
 } from "@lexical/selection";
 
 // ============================================
+// ImageNode - 画像
+// ============================================
+export type ImagePayload = {
+  src: string;
+  altText?: string;
+  width?: number;
+  height?: number;
+};
+
+export type SerializedImageNode = SerializedLexicalNode & {
+  src: string;
+  altText: string;
+  width?: number;
+  height?: number;
+};
+
+export const INSERT_IMAGE_COMMAND: LexicalCommand<ImagePayload> =
+  createCommand("INSERT_IMAGE_COMMAND");
+
+export class ImageNode extends DecoratorNode<null> {
+  __src: string;
+  __altText: string;
+  __width: number | undefined;
+  __height: number | undefined;
+
+  static getType(): string {
+    return "image";
+  }
+
+  static clone(node: ImageNode): ImageNode {
+    return new ImageNode(node.__src, node.__altText, node.__width, node.__height, node.__key);
+  }
+
+  constructor(src: string, altText?: string, width?: number, height?: number, key?: string) {
+    super(key);
+    this.__src = src;
+    this.__altText = altText || "";
+    this.__width = width;
+    this.__height = height;
+  }
+
+  static importJSON(serializedNode: SerializedImageNode): ImageNode {
+    return new ImageNode(
+      serializedNode.src,
+      serializedNode.altText,
+      serializedNode.width,
+      serializedNode.height,
+    );
+  }
+
+  static importDOM(): DOMConversionMap | null {
+    return {
+      img: () => ({
+        conversion: (domNode: Node) => {
+          const img = domNode as HTMLImageElement;
+          return {
+            node: new ImageNode(img.src, img.alt, img.width || undefined, img.height || undefined),
+          };
+        },
+        priority: 0,
+      }),
+    };
+  }
+
+  exportJSON(): SerializedImageNode {
+    return {
+      type: "image",
+      version: 1,
+      src: this.__src,
+      altText: this.__altText,
+      width: this.__width,
+      height: this.__height,
+    };
+  }
+
+  exportDOM(): DOMExportOutput {
+    const img = document.createElement("img");
+    img.src = this.__src;
+    img.alt = this.__altText;
+    if (this.__width) img.width = this.__width;
+    if (this.__height) img.height = this.__height;
+    return { element: img };
+  }
+
+  createDOM(_config: EditorConfig): HTMLElement {
+    const wrapper = document.createElement("div");
+    wrapper.className = "lexical-image-wrapper";
+
+    const img = document.createElement("img");
+    img.src = this.__src;
+    img.alt = this.__altText;
+    img.className = "lexical-image";
+    img.style.maxWidth = "100%";
+    img.style.height = "auto";
+    img.style.display = "block";
+    img.style.margin = "8px 0";
+    img.style.borderRadius = "4px";
+
+    if (this.__width) {
+      img.width = this.__width;
+    }
+    if (this.__height) {
+      img.height = this.__height;
+    }
+
+    wrapper.appendChild(img);
+    return wrapper;
+  }
+
+  updateDOM(): boolean {
+    return false;
+  }
+
+  getTextContent(): string {
+    return "\n";
+  }
+
+  decorate(): null {
+    return null;
+  }
+}
+
+// Register ImagePlugin command handler
+function registerImagePlugin(editor: LexicalEditor): () => void {
+  return editor.registerCommand(
+    INSERT_IMAGE_COMMAND,
+    (payload: ImagePayload) => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) {
+        return false;
+      }
+
+      const imageNode = new ImageNode(payload.src, payload.altText, payload.width, payload.height);
+      $insertNodes([imageNode]);
+
+      const paragraphNode = $createParagraphNode();
+      imageNode.insertAfter(paragraphNode);
+      paragraphNode.select();
+
+      return true;
+    },
+    COMMAND_PRIORITY_EDITOR,
+  );
+}
+
+// ============================================
 // DividerNode - 区切り線
 // ============================================
 export type SerializedDividerNode = SerializedLexicalNode;
@@ -199,7 +345,7 @@ function initEditor(placeholder: string): LexicalEditor {
   // Create Lexical editor with theme for text formatting
   const editor = createEditor({
     namespace: "PlaygroundEditor",
-    nodes: [HeadingNode, ListNode, ListItemNode, LinkNode, DividerNode],
+    nodes: [HeadingNode, ListNode, ListItemNode, LinkNode, DividerNode, ImageNode],
     theme: {
       text: {
         bold: "text-bold",
@@ -226,6 +372,7 @@ function initEditor(placeholder: string): LexicalEditor {
 
   // Register plugins
   registerDividerPlugin(editor);
+  registerImagePlugin(editor);
 
   // Register history plugin for undo/redo
   registerHistory(editor, createEmptyHistoryState(), 1000);
@@ -462,6 +609,12 @@ function handleMessage(editor: LexicalEditor, message: MessageFromRN): void {
     case "insertDivider":
       editor.dispatchCommand(INSERT_DIVIDER_COMMAND, undefined);
       break;
+
+    case "insertImage": {
+      const payload = message.payload as ImagePayload;
+      editor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
+      break;
+    }
 
     case "applyStyle": {
       const styles = message.payload as Record<string, string>;

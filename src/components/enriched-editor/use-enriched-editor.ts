@@ -59,14 +59,11 @@ export const useEnrichedEditor = ({
     html: initialHtml,
   });
 
-  const handleChangeState = useCallback(
-    (event: NativeSyntheticEvent<OnChangeStateEvent>) => {
-      event.persist?.();
-      const styles = { ...event.nativeEvent };
-      setEditorState((prev) => ({ ...prev, styles }));
-    },
-    []
-  );
+  const handleChangeState = useCallback((event: NativeSyntheticEvent<OnChangeStateEvent>) => {
+    event.persist?.();
+    const styles = { ...event.nativeEvent };
+    setEditorState((prev) => ({ ...prev, styles }));
+  }, []);
 
   const handleChangeSelection = useCallback(
     (event: NativeSyntheticEvent<OnChangeSelectionEvent>) => {
@@ -74,7 +71,7 @@ export const useEnrichedEditor = ({
       const selection = { ...event.nativeEvent };
       setEditorState((prev) => ({ ...prev, selection }));
     },
-    []
+    [],
   );
 
   const handleChangeHtml = useCallback(
@@ -84,7 +81,7 @@ export const useEnrichedEditor = ({
       setEditorState((prev) => ({ ...prev, html: value }));
       onHtmlChange?.(value);
     },
-    [onHtmlChange]
+    [onHtmlChange],
   );
 
   const handleFocus = useCallback(() => {
@@ -112,14 +109,8 @@ export const useEnrichedEditor = ({
 
   const toggleBold = useCallback(() => inputRef.current?.toggleBold(), []);
   const toggleItalic = useCallback(() => inputRef.current?.toggleItalic(), []);
-  const toggleUnderline = useCallback(
-    () => inputRef.current?.toggleUnderline(),
-    []
-  );
-  const toggleStrikeThrough = useCallback(
-    () => inputRef.current?.toggleStrikeThrough(),
-    []
-  );
+  const toggleUnderline = useCallback(() => inputRef.current?.toggleUnderline(), []);
+  const toggleStrikeThrough = useCallback(() => inputRef.current?.toggleStrikeThrough(), []);
 
   const setHeading = useCallback(
     (level: HeadingLevel) => {
@@ -149,7 +140,7 @@ export const useEnrichedEditor = ({
       if (isH2) inputRef.current?.toggleH2();
       inputRef.current?.toggleH3();
     },
-    [editorState.styles]
+    [editorState.styles],
   );
 
   const setList = useCallback(
@@ -168,8 +159,12 @@ export const useEnrichedEditor = ({
       if (isOrderedList) inputRef.current?.toggleOrderedList();
       inputRef.current?.toggleUnorderedList();
     },
-    [editorState.styles]
+    [editorState.styles],
   );
+
+  const insertImage = useCallback((src: string, width: number, height: number) => {
+    inputRef.current?.setImage(src, width, height);
+  }, []);
 
   const editorInputProps: Partial<EnrichedTextInputProps> = useMemo(
     () => ({
@@ -189,7 +184,7 @@ export const useEnrichedEditor = ({
       handleFocus,
       initialHtml,
       placeholder,
-    ]
+    ],
   );
 
   return {
@@ -205,5 +200,6 @@ export const useEnrichedEditor = ({
     toggleStrikeThrough,
     setHeading,
     setList,
+    insertImage,
   };
 };

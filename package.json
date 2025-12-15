@@ -8,11 +8,17 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "build:lexical": "node src/components/lexical-editor/web/build.mjs"
   },
   "dependencies": {
+    "@10play/tentap-editor": "^1.0.1",
     "expo": "54.0.21",
     "expo-constants": "^18.0.12",
+    "expo-file-system": "^19.0.21",
+    "expo-image-picker": "^17.0.10",
     "expo-linking": "^8.0.10",
     "expo-router": "^6.0.19",
     "expo-status-bar": "3.0.8",
@@ -35,6 +41,8 @@
     "@types/react": "19.1.17",
     "esbuild": "0.27.0",
     "lexical": "0.38.2",
+    "oxfmt": "^0.18.0",
+    "oxlint": "^1.33.0",
     "typescript": "5.9.3"
   },
   "packageManager": "pnpm@10.7.0",

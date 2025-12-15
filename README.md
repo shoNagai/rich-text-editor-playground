@@ -12,6 +12,7 @@ React Native で様々なリッチテキストエディタライブラリを試�
 
 - [x] **Lexical Editor** - Meta製のリッチテキストエディタ（WebView経由）
 - [x] **Enriched Editor** - react-native-enriched（ネイティブ実装）
+- [x] **10tap Editor** - @10play/tentap-editor（Tiptap based、WebView経由）
 
 ## プロジェクト構成
 
@@ -20,7 +21,8 @@ React Native で様々なリッチテキストエディタライブラリを試�
 │   ├── _layout.tsx               # ルートレイアウト
 │   ├── index.tsx                 # トップページ（エディタ一覧）
 │   ├── lexical-editor.tsx        # Lexical Editor ページ
-│   └── enriched-editor.tsx       # Enriched Editor ページ
+│   ├── enriched-editor.tsx       # Enriched Editor ページ
+│   └── tentap-editor.tsx         # 10tap Editor ページ
 ├── src/
 │   └── components/
 │       ├── lexical-editor/       # Lexical Editor コンポーネント

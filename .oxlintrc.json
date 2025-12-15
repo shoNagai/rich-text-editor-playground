@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "rules": {
+    "no-unused-vars": "error",
+    "no-console": "warn"
+  },
+  "ignorePatterns": [
+    "node_modules",
+    "ios",
+    "android",
+    ".expo",
+    "dist",
+    "*.config.js",
+    "*.config.ts"
+  ]
+}

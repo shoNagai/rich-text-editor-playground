@@ -233,6 +233,13 @@ export const useLexicalEditor = ({
     sendMessage("insertDivider");
   }, [sendMessage]);
 
+  const insertImage = useCallback(
+    (src: string, width?: number, height?: number) => {
+      sendMessage("insertImage", { src, width, height });
+    },
+    [sendMessage],
+  );
+
   const setTextColor = useCallback(
     (color: string | null) => {
       sendMessage("applyStyle", { color: color ?? "" });
@@ -278,6 +285,7 @@ export const useLexicalEditor = ({
     formatAlign,
     insertLink,
     insertDivider,
+    insertImage,
     setTextColor,
     setBackgroundColor,
     undo,

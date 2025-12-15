@@ -3,6 +3,7 @@ import { WebView } from "react-native-webview";
 import { EDITOR_HTML } from "./editor-html";
 import type { useLexicalEditor } from "./use-lexical-editor";
 import { Text } from "react-native";
+import { pickImage } from "../../utils/image-picker";
 
 type LexicalEditorProps = {
   editor: ReturnType<typeof useLexicalEditor>;
@@ -34,13 +35,7 @@ type ToolbarButtonProps = {
   label: string;
 };
 
-const ToolbarButton = ({
-  onPress,
-  isActive,
-  disabled,
-  children,
-  label,
-}: ToolbarButtonProps) => {
+const ToolbarButton = ({ onPress, isActive, disabled, children, label }: ToolbarButtonProps) => {
   return (
     <Pressable
       onPress={onPress}
@@ -65,34 +60,35 @@ type LexicalEditorToolbarProps = {
 };
 
 export const LexicalEditorToolbar = ({ editor }: LexicalEditorToolbarProps) => {
-  const { editorState, formatText, formatHeading, formatList, undo, redo, insertDivider } = editor;
+  const { editorState, formatText, formatHeading, formatList, undo, redo, insertImage } = editor;
   const { selection, canUndo, canRedo } = editorState;
+
+  const handleInsertImage = async () => {
+    const image = await pickImage();
+    if (image) {
+      insertImage(image.base64Uri, image.width, image.height);
+    }
+  };
 
   return (
     <View style={styles.toolbar}>
-      <ToolbarButton
-        onPress={undo}
-        disabled={!canUndo}
-        label="元に戻す"
-      >
+      <ToolbarButton onPress={undo} disabled={!canUndo} label="元に戻す">
         <Text style={styles.buttonText}>↩</Text>
       </ToolbarButton>
 
-      <ToolbarButton
-        onPress={redo}
-        disabled={!canRedo}
-        label="やり直す"
-      >
+      <ToolbarButton onPress={redo} disabled={!canRedo} label="やり直す">
         <Text style={styles.buttonText}>↪</Text>
       </ToolbarButton>
 
       <View style={styles.divider} />
 
-      <ToolbarButton
-        onPress={() => formatText("bold")}
-        isActive={selection.isBold}
-        label="太字"
-      >
+      <ToolbarButton onPress={handleInsertImage} label="画像">
+        <Text style={styles.buttonText}>🖼</Text>
+      </ToolbarButton>
+
+      <View style={styles.divider} />
+
+      <ToolbarButton onPress={() => formatText("bold")} isActive={selection.isBold} label="太字">
         <Text style={[styles.buttonText, styles.bold]}>B</Text>
       </ToolbarButton>
 
@@ -154,15 +150,6 @@ export const LexicalEditorToolbar = ({ editor }: LexicalEditorToolbarProps) => {
         label="番号付きリスト"
       >
         <Text style={styles.buttonText}>1.</Text>
-      </ToolbarButton>
-
-      <View style={styles.divider} />
-
-      <ToolbarButton
-        onPress={insertDivider}
-        label="区切り線"
-      >
-        <Text style={styles.buttonText}>─</Text>
       </ToolbarButton>
     </View>
   );

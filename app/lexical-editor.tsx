@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable, KeyboardAvoidingView, Platform } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, Text, View, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router } from "expo-router";
 import {
   LexicalEditor,
@@ -9,14 +8,8 @@ import {
 } from "../src/components/lexical-editor";
 
 export default function LexicalEditorScreen() {
-  const [content, setContent] = useState<string>("");
-  const insets = useSafeAreaInsets();
-
   const editor = useLexicalEditor({
-    placeholder: "テキストを入力...",
-    onContentChange: (json) => {
-      setContent(json);
-    },
+    placeholder: "Lexicalエディタで入力",
   });
 
   return (
@@ -40,24 +33,13 @@ export default function LexicalEditorScreen() {
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
-          keyboardVerticalOffset={insets.top}
+          keyboardVerticalOffset={0}
         >
           <View style={styles.editorContainer}>
             <LexicalEditor editor={editor} style={{ flex: 1 }} />
           </View>
 
           <LexicalEditorToolbar editor={editor} />
-
-          <View style={styles.debugContainer}>
-            <Text style={styles.debugTitle}>Editor State (JSON):</Text>
-            <ScrollView style={styles.debugScrollView}>
-              <Text style={styles.debugText}>
-                {content
-                  ? JSON.stringify(JSON.parse(content), null, 2)
-                  : "No content yet"}
-              </Text>
-            </ScrollView>
-          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </>

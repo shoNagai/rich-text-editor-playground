@@ -1,14 +1,10 @@
-import { View, Pressable, ScrollView, Text, StyleSheet, Dimensions } from "react-native";
-import { EnrichedTextInput } from "react-native-enriched";
-import type { useEnrichedEditor } from "./use-enriched-editor";
+import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
+import { RichText } from "@10play/tentap-editor";
 import { pickImage } from "../../utils/image-picker";
+import type { TentapEditor, TentapEditorState } from "./use-tentap-editor";
 
 const ICON_COLOR = "#FFFFFF";
 const ICON_COLOR_ACTIVE = "#007AFF";
-const EDITOR_BACKGROUND_COLOR = "#0a0a0a";
-
-// 画面幅の90%を最大幅とする
-const MAX_IMAGE_WIDTH = Dimensions.get("window").width * 0.9;
 
 type ToolbarButtonProps = {
   onPress: () => void;
@@ -37,33 +33,16 @@ const ToolbarButton = ({ onPress, isActive, disabled, children }: ToolbarButtonP
 
 const Separator = () => <View style={styles.separator} />;
 
-type ToolbarProps = {
-  editor: ReturnType<typeof useEnrichedEditor>;
+type TentapEditorToolbarProps = {
+  editor: TentapEditor;
+  state: TentapEditorState;
 };
 
-const Toolbar = ({ editor }: ToolbarProps) => {
-  const {
-    toggleBold,
-    toggleItalic,
-    toggleUnderline,
-    toggleStrikeThrough,
-    setHeading,
-    setList,
-    insertImage,
-    editorState,
-  } = editor;
-
+export const TentapEditorToolbar = ({ editor, state }: TentapEditorToolbarProps) => {
   const handleInsertImage = async () => {
     const image = await pickImage();
     if (image) {
-      // 画像が最大幅を超える場合はリサイズ
-      let { width, height } = image;
-      if (width > MAX_IMAGE_WIDTH) {
-        const ratio = MAX_IMAGE_WIDTH / width;
-        width = MAX_IMAGE_WIDTH;
-        height = height * ratio;
-      }
-      insertImage(image.uri, width, height);
+      editor.setImage(image.base64Uri);
     }
   };
 
@@ -80,13 +59,13 @@ const Toolbar = ({ editor }: ToolbarProps) => {
 
         <Separator />
 
-        <ToolbarButton onPress={toggleBold} isActive={editorState.styles.isBold}>
+        <ToolbarButton onPress={() => editor.toggleBold()} isActive={state.isBoldActive}>
           <Text
             style={[
               styles.toolbarText,
               {
                 fontWeight: "bold",
-                color: editorState.styles.isBold ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.isBoldActive ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -94,13 +73,13 @@ const Toolbar = ({ editor }: ToolbarProps) => {
           </Text>
         </ToolbarButton>
 
-        <ToolbarButton onPress={toggleItalic} isActive={editorState.styles.isItalic}>
+        <ToolbarButton onPress={() => editor.toggleItalic()} isActive={state.isItalicActive}>
           <Text
             style={[
               styles.toolbarText,
               {
                 fontStyle: "italic",
-                color: editorState.styles.isItalic ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.isItalicActive ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -108,13 +87,13 @@ const Toolbar = ({ editor }: ToolbarProps) => {
           </Text>
         </ToolbarButton>
 
-        <ToolbarButton onPress={toggleUnderline} isActive={editorState.styles.isUnderline}>
+        <ToolbarButton onPress={() => editor.toggleUnderline()} isActive={state.isUnderlineActive}>
           <Text
             style={[
               styles.toolbarText,
               {
                 textDecorationLine: "underline",
-                color: editorState.styles.isUnderline ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.isUnderlineActive ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -122,13 +101,13 @@ const Toolbar = ({ editor }: ToolbarProps) => {
           </Text>
         </ToolbarButton>
 
-        <ToolbarButton onPress={toggleStrikeThrough} isActive={editorState.styles.isStrikeThrough}>
+        <ToolbarButton onPress={() => editor.toggleStrike()} isActive={state.isStrikeActive}>
           <Text
             style={[
               styles.toolbarText,
               {
                 textDecorationLine: "line-through",
-                color: editorState.styles.isStrikeThrough ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.isStrikeActive ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -138,12 +117,12 @@ const Toolbar = ({ editor }: ToolbarProps) => {
 
         <Separator />
 
-        <ToolbarButton onPress={() => setHeading("h1")} isActive={editorState.styles.isH1}>
+        <ToolbarButton onPress={() => editor.toggleHeading(1)} isActive={state.headingLevel === 1}>
           <Text
             style={[
               styles.toolbarText,
               {
-                color: editorState.styles.isH1 ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.headingLevel === 1 ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -151,12 +130,12 @@ const Toolbar = ({ editor }: ToolbarProps) => {
           </Text>
         </ToolbarButton>
 
-        <ToolbarButton onPress={() => setHeading("h2")} isActive={editorState.styles.isH2}>
+        <ToolbarButton onPress={() => editor.toggleHeading(2)} isActive={state.headingLevel === 2}>
           <Text
             style={[
               styles.toolbarText,
               {
-                color: editorState.styles.isH2 ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.headingLevel === 2 ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -167,14 +146,14 @@ const Toolbar = ({ editor }: ToolbarProps) => {
         <Separator />
 
         <ToolbarButton
-          onPress={() => setList("unordered")}
-          isActive={editorState.styles.isUnorderedList}
+          onPress={() => editor.toggleBulletList()}
+          isActive={state.isBulletListActive}
         >
           <Text
             style={[
               styles.toolbarText,
               {
-                color: editorState.styles.isUnorderedList ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.isBulletListActive ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -183,14 +162,14 @@ const Toolbar = ({ editor }: ToolbarProps) => {
         </ToolbarButton>
 
         <ToolbarButton
-          onPress={() => setList("ordered")}
-          isActive={editorState.styles.isOrderedList}
+          onPress={() => editor.toggleOrderedList()}
+          isActive={state.isOrderedListActive}
         >
           <Text
             style={[
               styles.toolbarText,
               {
-                color: editorState.styles.isOrderedList ? ICON_COLOR_ACTIVE : ICON_COLOR,
+                color: state.isOrderedListActive ? ICON_COLOR_ACTIVE : ICON_COLOR,
               },
             ]}
           >
@@ -202,36 +181,23 @@ const Toolbar = ({ editor }: ToolbarProps) => {
   );
 };
 
-type EnrichedEditorProps = {
-  editor: ReturnType<typeof useEnrichedEditor>;
-  style?: { flex?: number; height?: number };
+type TentapEditorComponentProps = {
+  editor: TentapEditor;
 };
 
-export const EnrichedEditor = ({ editor, style }: EnrichedEditorProps) => {
+export const TentapEditorComponent = ({ editor }: TentapEditorComponentProps) => {
   return (
-    <View style={[styles.editorContainer, style]}>
-      <EnrichedTextInput
-        ref={editor.inputRef}
-        {...editor.editorInputProps}
-        placeholderTextColor="#6B7280"
-        cursorColor={ICON_COLOR_ACTIVE}
-        selectionColor={ICON_COLOR_ACTIVE}
-        scrollEnabled
-        style={styles.editorInput}
-      />
+    <View style={styles.editorContainer}>
+      <RichText editor={editor} />
     </View>
   );
 };
 
-type EnrichedEditorToolbarProps = {
-  editor: ReturnType<typeof useEnrichedEditor>;
-};
-
-export const EnrichedEditorToolbar = ({ editor }: EnrichedEditorToolbarProps) => {
-  return <Toolbar editor={editor} />;
-};
-
 const styles = StyleSheet.create({
+  editorContainer: {
+    flex: 1,
+    backgroundColor: "#0a0a0a",
+  },
   toolbarContainer: {
     height: 48,
     backgroundColor: "#1C1C1E",
@@ -257,17 +223,5 @@ const styles = StyleSheet.create({
     height: 24,
     width: 2,
     backgroundColor: "#333",
-  },
-  editorContainer: {
-    flex: 1,
-    backgroundColor: EDITOR_BACKGROUND_COLOR,
-  },
-  editorInput: {
-    flex: 1,
-    color: "#FFFFFF",
-    fontSize: 16,
-    lineHeight: 25.6,
-    padding: 16,
-    textAlignVertical: "top",
   },
 });

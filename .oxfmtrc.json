@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    "ios/**",
+    "android/**",
+    ".expo/**",
+    "node_modules/**",
+    "pnpm-lock.yaml",
+    "src/components/lexical-editor/editor-html.ts"
+  ]
+}
