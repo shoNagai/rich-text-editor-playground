@@ -12,7 +12,12 @@ const EDITORS: EditorItem[] = [
   {
     name: "Lexical Editor",
     href: "/lexical-editor",
-    description: "Meta製のリッチテキストエディタ",
+    description: "Meta製のリッチテキストエディタ（WebView）",
+  },
+  {
+    name: "Enriched Editor",
+    href: "/enriched-editor",
+    description: "react-native-enriched（ネイティブ）",
   },
 ];
 

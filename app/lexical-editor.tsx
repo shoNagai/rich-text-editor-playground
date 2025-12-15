@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, View, ScrollView, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Stack, router } from "expo-router";
 import {
   LexicalEditor,
@@ -10,6 +10,7 @@ import {
 
 export default function LexicalEditorScreen() {
   const [content, setContent] = useState<string>("");
+  const insets = useSafeAreaInsets();
 
   const editor = useLexicalEditor({
     placeholder: "テキストを入力...",
@@ -25,7 +26,7 @@ export default function LexicalEditorScreen() {
           title: "Lexical Editor",
         }}
       />
-      <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
+      <SafeAreaView style={styles.container} edges={["top"]}>
         <View style={styles.header}>
           <View style={styles.headerTop}>
             <Pressable onPress={() => router.back()} style={styles.backButton}>
@@ -36,22 +37,28 @@ export default function LexicalEditorScreen() {
           <Text style={styles.subtitle}>React Native Playground</Text>
         </View>
 
-        <View style={styles.editorContainer}>
-          <LexicalEditor editor={editor} style={{ flex: 1 }} />
-        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={insets.top}
+        >
+          <View style={styles.editorContainer}>
+            <LexicalEditor editor={editor} style={{ flex: 1 }} />
+          </View>
 
-        <LexicalEditorToolbar editor={editor} />
+          <LexicalEditorToolbar editor={editor} />
 
-        <View style={styles.debugContainer}>
-          <Text style={styles.debugTitle}>Editor State (JSON):</Text>
-          <ScrollView style={styles.debugScrollView}>
-            <Text style={styles.debugText}>
-              {content
-                ? JSON.stringify(JSON.parse(content), null, 2)
-                : "No content yet"}
-            </Text>
-          </ScrollView>
-        </View>
+          <View style={styles.debugContainer}>
+            <Text style={styles.debugTitle}>Editor State (JSON):</Text>
+            <ScrollView style={styles.debugScrollView}>
+              <Text style={styles.debugText}>
+                {content
+                  ? JSON.stringify(JSON.parse(content), null, 2)
+                  : "No content yet"}
+              </Text>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </>
   );

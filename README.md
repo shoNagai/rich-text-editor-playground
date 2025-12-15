@@ -11,6 +11,7 @@ React Native で様々なリッチテキストエディタライブラリを試�
 ## 対応エディタ
 
 - [x] **Lexical Editor** - Meta製のリッチテキストエディタ（WebView経由）
+- [x] **Enriched Editor** - react-native-enriched（ネイティブ実装）
 
 ## プロジェクト構成
 
@@ -18,17 +19,22 @@ React Native で様々なリッチテキストエディタライブラリを試�
 ├── app/                          # expo-router ページ
 │   ├── _layout.tsx               # ルートレイアウト
 │   ├── index.tsx                 # トップページ（エディタ一覧）
-│   └── lexical-editor.tsx        # Lexical Editor ページ
+│   ├── lexical-editor.tsx        # Lexical Editor ページ
+│   └── enriched-editor.tsx       # Enriched Editor ページ
 ├── src/
 │   └── components/
-│       └── lexical-editor/       # Lexical Editor コンポーネント
+│       ├── lexical-editor/       # Lexical Editor コンポーネント
+│       │   ├── index.ts
+│       │   ├── lexical-editor.tsx
+│       │   ├── use-lexical-editor.ts
+│       │   ├── editor-html.ts
+│       │   └── web/              # WebView用ビルド
+│       │       ├── build.mjs
+│       │       └── editor-template.html
+│       └── enriched-editor/      # Enriched Editor コンポーネント
 │           ├── index.ts
-│           ├── lexical-editor.tsx
-│           ├── use-lexical-editor.ts
-│           ├── editor-html.ts
-│           └── web/              # WebView用ビルド
-│               ├── build.mjs
-│               └── editor-template.html
+│           ├── enriched-editor.tsx
+│           └── use-enriched-editor.ts
 ├── app.json                      # Expo設定
 ├── package.json
 └── tsconfig.json
