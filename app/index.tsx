@@ -24,6 +24,11 @@ const EDITORS: EditorItem[] = [
     href: "/tentap-editor",
     description: "@10play/tentap-editor（Tiptap based）",
   },
+  {
+    name: "Pell Editor",
+    href: "/pell-editor",
+    description: "react-native-pell-rich-editor（WebView）",
+  },
 ];
 
 export default function HomeScreen() {
