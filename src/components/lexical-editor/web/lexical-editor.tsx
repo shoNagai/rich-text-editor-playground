@@ -9,6 +9,7 @@ import {
   $getSelection,
   $isRangeSelection,
   $insertNodes,
+  $getNodeByKey,
   createEditor,
   FORMAT_TEXT_COMMAND,
   FORMAT_ELEMENT_COMMAND,
@@ -75,6 +76,13 @@ export type SerializedImageNode = SerializedLexicalNode & {
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<ImagePayload> =
   createCommand("INSERT_IMAGE_COMMAND");
+
+// Global reference to editor for ImageNode delete functionality
+let globalEditor: LexicalEditor | null = null;
+
+export function setGlobalEditor(editor: LexicalEditor): void {
+  globalEditor = editor;
+}
 
 export class ImageNode extends DecoratorNode<null> {
   __src: string;
@@ -144,6 +152,9 @@ export class ImageNode extends DecoratorNode<null> {
   createDOM(_config: EditorConfig): HTMLElement {
     const wrapper = document.createElement("div");
     wrapper.className = "lexical-image-wrapper";
+    wrapper.style.position = "relative";
+    wrapper.style.display = "inline-block";
+    wrapper.style.maxWidth = "100%";
 
     const img = document.createElement("img");
     img.src = this.__src;
@@ -162,7 +173,65 @@ export class ImageNode extends DecoratorNode<null> {
       img.height = this.__height;
     }
 
+    // Create delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "lexical-image-delete-button";
+    deleteButton.innerHTML = "×";
+    deleteButton.style.position = "absolute";
+    deleteButton.style.top = "12px";
+    deleteButton.style.left = "12px";
+    deleteButton.style.width = "28px";
+    deleteButton.style.height = "28px";
+    deleteButton.style.borderRadius = "50%";
+    deleteButton.style.border = "none";
+    deleteButton.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+    deleteButton.style.color = "white";
+    deleteButton.style.fontSize = "18px";
+    deleteButton.style.fontWeight = "bold";
+    deleteButton.style.cursor = "pointer";
+    deleteButton.style.display = "flex";
+    deleteButton.style.alignItems = "center";
+    deleteButton.style.justifyContent = "center";
+    deleteButton.style.opacity = "0";
+    deleteButton.style.transition = "opacity 0.2s ease";
+    deleteButton.style.zIndex = "10";
+    deleteButton.setAttribute("contenteditable", "false");
+    deleteButton.setAttribute("aria-label", "画像を削除");
+
+    // Store nodeKey for delete handler
+    const nodeKey = this.__key;
+
+    // Delete button click handler
+    deleteButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (globalEditor) {
+        globalEditor.update(() => {
+          const node = $getNodeByKey(nodeKey);
+          if (node) {
+            node.remove();
+          }
+        });
+      }
+    });
+
+    // Show delete button on hover
+    wrapper.addEventListener("mouseenter", () => {
+      deleteButton.style.opacity = "1";
+    });
+
+    wrapper.addEventListener("mouseleave", () => {
+      deleteButton.style.opacity = "0";
+    });
+
+    // For touch devices, show button on touch
+    wrapper.addEventListener("touchstart", () => {
+      deleteButton.style.opacity = "1";
+    });
+
     wrapper.appendChild(img);
+    wrapper.appendChild(deleteButton);
     return wrapper;
   }
 
@@ -363,6 +432,9 @@ function initEditor(placeholder: string): LexicalEditor {
 
   // Set root element
   editor.setRootElement(contentEditable);
+
+  // Set global editor reference for ImageNode delete functionality
+  setGlobalEditor(editor);
 
   // Register rich text support (required for basic text editing)
   registerRichText(editor);
