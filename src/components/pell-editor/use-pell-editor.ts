@@ -98,7 +98,11 @@ export const usePellEditor = ({
   }, []);
 
   const insertImage = useCallback((url: string, _width?: number, _height?: number) => {
-    editorRef.current?.insertImage(url);
+    const imageHtml = `<div class="pell-image-wrapper" contenteditable="false"><img src="${url}" alt="" /><button class="pell-image-delete-button" type="button" tabindex="-1" aria-label="画像を削除">×</button></div><p><br></p>`;
+    editorRef.current?.insertHTML(imageHtml);
+    setTimeout(() => {
+      editorRef.current?.focusContentEditor();
+    }, 100);
   }, []);
 
   const undo = useCallback(() => {

@@ -3,6 +3,54 @@ import { RichEditor } from "react-native-pell-rich-editor";
 import type { PellEditor } from "./use-pell-editor";
 import { pickImage } from "../../utils/image-picker";
 
+const customCSS = `
+  .pell-image-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    margin: 8px 0;
+  }
+  .pell-image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+  }
+  .pell-image-delete-button {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    line-height: 1;
+    padding: 0;
+  }
+`;
+
+const customJS = `
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('pell-image-delete-button')) {
+      e.preventDefault();
+      e.stopPropagation();
+      var wrapper = e.target.closest('.pell-image-wrapper');
+      if (wrapper) {
+        wrapper.remove();
+      }
+    }
+  });
+`;
+
 type ToolbarButtonProps = {
   onPress: () => void;
   isActive?: boolean;
@@ -37,6 +85,10 @@ type PellEditorComponentProps = {
 };
 
 export const PellEditorComponent = ({ editor }: PellEditorComponentProps) => {
+  const handleEditorInitialized = () => {
+    editor.editorRef.current?.injectJavascript(customJS);
+  };
+
   return (
     <ScrollView style={styles.editorScrollView} contentContainerStyle={styles.editorScrollContent}>
       <RichEditor
@@ -55,8 +107,10 @@ export const PellEditorComponent = ({ editor }: PellEditorComponentProps) => {
             line-height: 1.6;
             font-size: 16px;
           `,
+          cssText: customCSS,
         }}
         style={styles.editor}
+        editorInitializedCallback={handleEditorInitialized}
       />
     </ScrollView>
   );
